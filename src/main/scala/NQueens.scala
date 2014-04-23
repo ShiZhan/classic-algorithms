@@ -18,5 +18,5 @@ object NQueens {
   def seed(size: Int) = rowSet(size, 0) map (sol => List(sol))
   def solve(size: Int) = (1 until size).foldLeft(seed(size)) (expand(_, size, _))
 
-  def main(args:Array[String]) = solve(args.head.toInt)
+  def main(args:Array[String]) = solve(args.head.toInt) foreach println
 }
