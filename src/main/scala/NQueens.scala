@@ -16,7 +16,7 @@ object NQueens {
     } yield pos :: solution
 
   def seed(size: Int) = rowSet(size, 0) map (sol => List(sol))
-  def solve(size: Int) = (1 until size).foldLeft(seed(size)) (expand(_, size, _))
+  def solve(size: Int) = (1 until size).foldLeft(seed(size))(expand(_, size, _))
 
-  def main(args:Array[String]) = solve(args.head.toInt) foreach println
+  def main(args: Array[String]) = solve(args.head.toInt) foreach println
 }

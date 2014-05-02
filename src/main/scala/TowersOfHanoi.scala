@@ -1,5 +1,5 @@
 object TowersOfHanoi {
-  def move(n: Int, from: String, to: String, via: String) : Unit = {
+  def move(n: Int, from: String, to: String, via: String): Unit = {
     if (n == 1) {
       Console.println("Move disk from " + from + " pole to " + to + " pole ")
     } else {
