@@ -16,5 +16,8 @@ project/plugins/project/
 .scala_dependencies
 .worksheet
 
-# mac
+.cache
+.classpath
+.project
+
 .DS_Store
