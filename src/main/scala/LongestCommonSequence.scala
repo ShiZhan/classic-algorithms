@@ -1,17 +1,15 @@
 object LongestCommonSequence {
-  case class CompareTable(lengthL: Int, lengthR: Int) {
-    private val t = Array.fill(lengthL)(Array.fill(lengthR)(0))
-    def set(i: Int, j: Int, value: Int) = { t(i)(j) = value }
-    def get(i: Int, j: Int) = if (i < 0 || j < 0) 0 else t(i)(j)
-  }
-
   implicit class LCSop[T](left: Seq[T]) {
+    private def get(t: Array[Array[Int]], i: Int, j: Int) = if (i < 0 || j < 0) 0 else t(i)(j)
     def <=>(right: Seq[T]) = {
-      val t = CompareTable(left.length, right.length)
+      val t = Array.fill(left.length)(Array.fill(right.length)(0))
+      val p = Array.fill(left.length)(Array.fill(right.length)(0))
       for ((l, i) <- left.zipWithIndex)
-        for ((r, j) <- right.zipWithIndex)
-          t.set(i, j, if (l == r) t.get(i - 1, j - 1) + 1 else t.get(i - 1, j) max t.get(i, j - 1))
-      t.get(left.length - 1, right.length - 1)
+        for ((r, j) <- right.zipWithIndex) {
+          t(i)(j) = if (l == r) get(t, i - 1, j - 1) + 1 else get(t, i - 1, j) max get(t, i, j - 1)
+          p(i)(j) = if (l == r) 1 else 0
+        }
+      t(left.length - 1)(right.length - 1)
     }
   }
 
