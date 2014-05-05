@@ -3,7 +3,7 @@ object LongestCommonSequence {
     private def get(t: Array[Array[Int]], i: Int, j: Int) = if (i < 0 || j < 0) 0 else t(i)(j)
 
     def <=>(right: Seq[T]) = {
-      val t = Array.fill(left.length)(Array.fill(right.length)(0))
+      val t = Array.fill(left.length, right.length)(0)
       for ((l, i) <- left.zipWithIndex)
         for ((r, j) <- right.zipWithIndex)
           t(i)(j) = if (l == r) get(t, i - 1, j - 1) + 1 else get(t, i - 1, j) max get(t, i, j - 1)

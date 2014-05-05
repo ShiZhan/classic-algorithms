@@ -24,7 +24,7 @@ object GraphReachability {
 
   def main(args: Array[String]) = {
     val vertexTotal = args(0).toInt
-    val m = Array.fill(vertexTotal)(Array.fill(vertexTotal)(Random.nextInt(2)))
+    val m = Array.fill(vertexTotal, vertexTotal)(Random.nextInt(2))
     val g = Graph(m)
     println(g)
     println(g.reachable(0, vertexTotal - 1))
