@@ -1,4 +1,4 @@
-case class Maze(height: Int, width: Int) {
+case class SimpleMaze(height: Int, width: Int) {
   import scala.util.Random
 
   private def wall = if (Random.nextInt(10) > 3) 1 else 0
@@ -35,9 +35,13 @@ case class Maze(height: Int, width: Int) {
   }
 }
 
+case class ConnectedMaze(height: Int, width: Int) {
+  
+}
+
 object MazeGenerator {
   def main(args: Array[String]) = {
-    val m = Maze(args(0).toInt, args(1).toInt)
+    val m = SimpleMaze(args(0).toInt, args(1).toInt)
     println(m)
     val g = Graph(m.toGraph)
     println(g); println(g.reachable(0, args(0).toInt * args(1).toInt - 1))
