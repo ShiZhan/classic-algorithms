@@ -62,7 +62,7 @@ case class ConnectedMaze(height: Int, width: Int) extends Maze(height, width) {
     val anyDirection = Random.nextInt(4)
     (0 to 3).map { d => (d + anyDirection) % 4 } foreach { d =>
       val next = (r, c).to(d)
-      if (next != (0, 0)) dig(next._1, next._2)
+      if (next != (0, 0)) { val (r1, c1) = next; dig(r1, c1) }
     }
   }
 
