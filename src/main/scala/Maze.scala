@@ -86,5 +86,7 @@ object ConnectedMazeGenerator {
   def main(args: Array[String]) = {
     val m = ConnectedMaze(args(0).toInt, args(1).toInt)
     println(m)
+    val g = Graph(m.toGraph)
+    println(g.reachable(0, args(0).toInt * args(1).toInt - 1))
   }
 }
