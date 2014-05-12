@@ -1,5 +1,5 @@
 class Maze(height: Int, width: Int) {
-  val cells = Array.fill(height + 1, width + 1)((0, 0))
+  val cells = Array.fill(height + 1, width + 1)((1, 1))
 
   override def toString = cells.map { row =>
     val (v, h) = row.unzip
@@ -41,20 +41,29 @@ case class SimpleMaze(height: Int, width: Int) extends Maze(height, width) {
 case class ConnectedMaze(height: Int, width: Int) extends Maze(height, width) {
   import scala.util.Random
 
-  private def wall = if (Random.nextInt(10) > 3) 1 else 0
+  cells(0)(0) = (0, 0)
+  (1 to height).foreach { cells(_)(0) = (1, 0) }
+  (1 to width).foreach { cells(0)(_) = (0, 1) }
 
-  (0 to height).foreach { r =>
-    (0 to width).foreach { c =>
+  implicit class Position(p: (Int, Int)) {
+    val (r, c) = p
+    private def dig(to: Int) = {
     }
   }
-  cells(height)(width) = (1, 1)
 }
 
-object MazeGenerator {
+object SimpleMazeGenerator {
   def main(args: Array[String]) = {
     val m = SimpleMaze(args(0).toInt, args(1).toInt)
     println(m)
     val g = Graph(m.toGraph)
     println(g); println(g.reachable(0, args(0).toInt * args(1).toInt - 1))
+  }
+}
+
+object ConnectedMazeGenerator {
+  def main(args: Array[String]) = {
+    val m = ConnectedMaze(args(0).toInt, args(1).toInt)
+    println(m)
   }
 }
