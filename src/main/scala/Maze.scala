@@ -26,14 +26,11 @@ class Maze(height: Int, width: Int) {
 case class SimpleMaze(height: Int, width: Int) extends Maze(height, width) {
   import scala.util.Random
 
-  private def wall = if (Random.nextInt(10) > 3) 1 else 0
+  private def wall = if (Random.nextInt(10) > 3) 0 else 1
 
-  (0 to height).foreach { r =>
-    (0 to width).foreach { c =>
-      vMat(r)(c) = if (r == 0) 0 else if (c == 0 || c == width) 1 else wall
-      hMat(r)(c) = if (c == 0) 0 else if (r == 0 || r == height) 1 else wall
-    }
-  }
+  for (r <- 0 to height) { hMat(r)(0) = 0; if (r > 0 && r < height) hMat(r)(width) = wall }
+  for (c <- 0 to width) { vMat(0)(c) = 0; if (c > 0 && c < width) vMat(height)(c) = wall }
+  for (r <- 1 to height - 1; c <- 1 to width - 1) { vMat(r)(c) = wall; hMat(r)(c) = wall }
 }
 
 case class ConnectedMaze(height: Int, width: Int) extends Maze(height, width) {
