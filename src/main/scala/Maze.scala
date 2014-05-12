@@ -39,7 +39,7 @@ case class SimpleMaze(height: Int, width: Int) extends Maze(height, width) {
 case class ConnectedMaze(height: Int, width: Int) extends Maze(height, width) {
   import scala.util.Random
 
-  val visited = Array.fill(height + 1, width + 1)(false)
+  private val visited = Array.fill(height + 1, width + 1)(false)
   private def isVisited(p: (Int, Int)) = visited(p._1)(p._2)
 
   (0 to height).foreach { hMat(_)(0) = 0 }
@@ -52,10 +52,10 @@ case class ConnectedMaze(height: Int, width: Int) extends Maze(height, width) {
     val west = (r, c - 1)
     val north = (r - 1, c)
     def to(direction: Int) = direction match {
-      case 0 => if (c == width) (0, 0) else if (isVisited(east)) (0, 0) else { vMat(r)(c) = 0; east }
-      case 1 => if (r == height) (0, 0) else if (isVisited(south)) (0, 0) else { hMat(r)(c) = 0; south }
-      case 2 => if (c == 1) (0, 0) else if (isVisited(west)) (0, 0) else { vMat(r)(c - 1) = 0; west }
-      case 3 => if (r == 1) (0, 0) else if (isVisited(north)) (0, 0) else { hMat(r - 1)(c) = 0; north }
+      case 0 => if (c < width) if (isVisited(east)) (0, 0) else { vMat(r)(c) = 0; east } else (0, 0)
+      case 1 => if (r < height) if (isVisited(south)) (0, 0) else { hMat(r)(c) = 0; south } else (0, 0)
+      case 2 => if (c > 1) if (isVisited(west)) (0, 0) else { vMat(r)(c - 1) = 0; west } else (0, 0)
+      case 3 => if (r > 1) if (isVisited(north)) (0, 0) else { hMat(r - 1)(c) = 0; north } else (0, 0)
       case _ => (0, 0)
     }
   }
@@ -69,7 +69,7 @@ case class ConnectedMaze(height: Int, width: Int) extends Maze(height, width) {
     }
   }
 
-  dig(1, 1)
+  dig(height / 2, width / 2)
 }
 
 object SimpleMazeGenerator {
