@@ -5,21 +5,37 @@ case class Graph(m: Array[Array[Int]]) {
 
   override def toString = m.map(_.mkString(" ")).mkString("\n")
 
-  private def _reachable(from: Int, to: Int, visited: Array[Boolean]): Boolean = {
+  def reachable(from: Int, to: Int, visited: Array[Boolean]): Boolean = {
     visited(from) = true
     if (from == to) true
     else
       m(from).zipWithIndex.exists {
         case (edge, vertex) =>
-          !visited(vertex) && edge > 0 && _reachable(vertex, to, visited)
+          !visited(vertex) && edge > 0 && reachable(vertex, to, visited)
       }
   }
 
-  def reachable(from: Int, to: Int) =
-    _reachable(from, to, Array.fill(vertexTotal)(false))
+  type Path = (Int, List[Int])
+
+  def dijkstra(from: List[Path], to: Int, visited: Set[Int]): Path = from match {
+    case (distance, path) :: candidates => path match {
+      case current :: path_rest =>
+        if (current == to) (distance, path.reverse)
+        else {
+          val paths = m(current).toList.zipWithIndex.flatMap {
+            case (e, v) =>
+              if (e > 0 && !visited.contains(v)) List((distance + e, v :: path)) else Nil
+          }
+          val sorted_candidates = (paths ++ candidates).sortBy(_._1)
+          dijkstra(sorted_candidates, to, visited + current)
+        }
+      case Nil => (0, List())
+    }
+    case Nil => (0, List())
+  }
 }
 
-object GraphReachability {
+object GraphTraverse {
   import scala.util.Random
 
   def main(args: Array[String]) = {
@@ -27,6 +43,7 @@ object GraphReachability {
     val m = Array.fill(vertexTotal, vertexTotal)(Random.nextInt(2))
     val g = Graph(m)
     println(g)
-    println(g.reachable(0, vertexTotal - 1))
+    println(g.reachable(0, vertexTotal - 1, Array.fill(vertexTotal)(false)))
+    println(g.dijkstra(List((0, List(0))), vertexTotal - 1, Set[Int]()))
   }
 }
