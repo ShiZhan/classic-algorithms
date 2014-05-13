@@ -73,9 +73,9 @@ object SimpleMazeGenerator {
   def main(args: Array[String]) = {
     val m = SimpleMaze(args(0).toInt, args(1).toInt)
     println(m)
-    val g = Graph(m.toGraph)
+    val g = Graph(m.toGraph); val vertexTotal = args(0).toInt * args(1).toInt
     println(g)
-    println(g.reachable(0, args(0).toInt * args(1).toInt - 1))
+    println(g.reachable(0, vertexTotal - 1, Array.fill(vertexTotal)(false)))
   }
 }
 
@@ -83,7 +83,7 @@ object ConnectedMazeGenerator {
   def main(args: Array[String]) = {
     val m = ConnectedMaze(args(0).toInt, args(1).toInt)
     println(m)
-    val g = Graph(m.toGraph)
-    println(g.reachable(0, args(0).toInt * args(1).toInt - 1))
+    val g = Graph(m.toGraph); val vertexTotal = args(0).toInt * args(1).toInt
+    println(g.dijkstra(List((0, List(0))), vertexTotal - 1, Set[Int]()))
   }
 }
