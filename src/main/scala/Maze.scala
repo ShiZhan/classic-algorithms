@@ -8,6 +8,21 @@ class Maze(height: Int, width: Int) {
     vLine + hLine
   }.mkString
 
+  def solve(from: (Int, Int), to: (Int, Int), visited: List[(Int, Int)]): List[(Int, Int)] =
+    if (from == to) visited ++ List(to)
+    else {
+      val (r, c) = from
+      if (r >= 1 && r <= height && c >= 1 && c <= width && !visited.contains(from)) {
+        val possibleMoves =
+          (if (vMat(r)(c) == 0) Iterable((r, c + 1)) else Nil) ++
+            (if (hMat(r)(c) == 0) Iterable((r + 1, c)) else Nil) ++
+            (if (hMat(r)(c - 1) == 0) Iterable((r, c - 1)) else Nil) ++
+            (if (vMat(r - 1)(c) == 0) Iterable((r - 1, c)) else Nil)
+        possibleMoves.map(solve(_, to, visited ++ List(from))).filter(!_.isEmpty)
+          .headOption.getOrElse(List[(Int, Int)]())
+      } else List[(Int, Int)]()
+    }
+
   def toGraph = {
     val cellTotal = height * width
     val g = Array.fill(cellTotal, cellTotal)(0)
@@ -65,19 +80,22 @@ case class ConnectedMaze(height: Int, width: Int) extends Maze(height, width) {
 
 object SimpleMazeGenerator {
   def main(args: Array[String]) = {
-    val m = SimpleMaze(args(0).toInt, args(1).toInt)
+    val height = args(0).toInt; val width = args(1).toInt
+    val m = SimpleMaze(height, width)
     println(m)
-    val g = Graph(m.toGraph); val vertexTotal = args(0).toInt * args(1).toInt
-    println(g)
+    val path = m.solve((1, 1), (height, width), List[(Int, Int)]())
+    println(path)
+    val g = Graph(m.toGraph); val vertexTotal = height * width
     println(g.reachable(0, vertexTotal - 1, Array.fill(vertexTotal)(false)))
   }
 }
 
 object ConnectedMazeGenerator {
   def main(args: Array[String]) = {
-    val m = ConnectedMaze(args(0).toInt, args(1).toInt)
+    val height = args(0).toInt; val width = args(1).toInt
+    val m = ConnectedMaze(height, width)
     println(m)
-    val g = Graph(m.toGraph); val vertexTotal = args(0).toInt * args(1).toInt
+    val g = Graph(m.toGraph); val vertexTotal = height * width
     println(g.dijkstra(List((0, List(0))), vertexTotal - 1, Set[Int]()))
   }
 }
