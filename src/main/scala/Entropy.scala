@@ -5,7 +5,7 @@ object Entropy {
   def entropy[T](v: Seq[T]) = {
     v.groupBy(a => a).values
       .map(i => i.length.toDouble / v.length)
-      .map(p => -p * log10(p) / log10(2))
+      .map(p => -p * log(p) / log(2))
       .sum
   }
 
