@@ -24,20 +24,17 @@ class PlayBoard(size: Int, color: Int) {
   }
 }
 
-object PlayBoard {
-  def apply(size: Int, color: Int) = new PlayBoard(size, color)
-  def apply() = new PlayBoard(8, 7)
-}
-
 object Bejeweled {
   def main(args: Array[String]) = {
     val size = args(0).toInt
     val color = args(1).toInt
-    val pb = PlayBoard(size, color)
+    val pb = new PlayBoard(size, color)
     println(pb)
     val (rows, cols) = pb.check
-    val rowMatches = rows.map(_.map(_.mkString(", ")).mkString("|")).mkString("\n")
-    val colMatches = cols.map(_.map(_.mkString(", ")).mkString("|")).mkString("\n")
-    println(rowMatches + "---\n" + colMatches)
+    val rowMatches = rows.zipWithIndex
+      .map { case (row, i) => row.map(_.mkString(", ")).mkString(i + ": ", "|", "\n") }.mkString
+    val colMatches = cols.zipWithIndex
+      .map { case (col, i) => col.map(_.mkString(", ")).mkString(i + ": ", "|", "\n") }.mkString
+    println("row matches:\n" + rowMatches + "col matches:\n" + colMatches)
   }
 }
