@@ -1,4 +1,4 @@
-case class Graph(m: Array[Array[Int]]) {
+class Graph(m: Array[Array[Int]]) {
   val vertexTotal = m.length
 
   assert(vertexTotal == m.head.length)
@@ -41,7 +41,7 @@ object GraphTraverse {
   def main(args: Array[String]) = {
     val vertexTotal = args(0).toInt
     val m = Array.fill(vertexTotal, vertexTotal)(Random.nextInt(2))
-    val g = Graph(m)
+    val g = new Graph(m)
     println(g)
     println(g.reachable(0, vertexTotal - 1, Array.fill(vertexTotal)(false)))
     println(g.dijkstra(List((0, List(0))), vertexTotal - 1, Set[Int]()))

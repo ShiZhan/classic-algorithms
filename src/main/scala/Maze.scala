@@ -37,7 +37,7 @@ class Maze(height: Int, width: Int) {
   }
 }
 
-case class SimpleMaze(height: Int, width: Int) extends Maze(height, width) {
+class SimpleMaze(height: Int, width: Int) extends Maze(height, width) {
   private def wall = if (util.Random.nextInt(10) > 3) 0 else 1
 
   for (r <- 0 to height) hMat(r)(0) = 0; for (r <- 1 to height - 1) hMat(r)(width) = wall
@@ -45,7 +45,7 @@ case class SimpleMaze(height: Int, width: Int) extends Maze(height, width) {
   for (r <- 1 to height - 1; c <- 1 to width - 1) { vMat(r)(c) = wall; hMat(r)(c) = wall }
 }
 
-case class ConnectedMaze(height: Int, width: Int) extends Maze(height, width) {
+class ConnectedMaze(height: Int, width: Int) extends Maze(height, width) {
   private val visited = Array.fill(height + 1, width + 1)(false)
   private def isVisited(p: (Int, Int)) = visited(p._1)(p._2)
 
@@ -81,11 +81,11 @@ case class ConnectedMaze(height: Int, width: Int) extends Maze(height, width) {
 object SimpleMazeGenerator {
   def main(args: Array[String]) = {
     val height = args(0).toInt; val width = args(1).toInt
-    val m = SimpleMaze(height, width)
+    val m = new SimpleMaze(height, width)
     println(m)
     val path = m.solve((1, 1), (height, width), List[(Int, Int)]())
     println(path)
-    val g = Graph(m.toGraph); val vertexTotal = height * width
+    val g = new Graph(m.toGraph); val vertexTotal = height * width
     println(g.reachable(0, vertexTotal - 1, Array.fill(vertexTotal)(false)))
   }
 }
@@ -93,9 +93,9 @@ object SimpleMazeGenerator {
 object ConnectedMazeGenerator {
   def main(args: Array[String]) = {
     val height = args(0).toInt; val width = args(1).toInt
-    val m = ConnectedMaze(height, width)
+    val m = new ConnectedMaze(height, width)
     println(m)
-    val g = Graph(m.toGraph); val vertexTotal = height * width
+    val g = new Graph(m.toGraph); val vertexTotal = height * width
     println(g.dijkstra(List((0, List(0))), vertexTotal - 1, Set[Int]()))
   }
 }
