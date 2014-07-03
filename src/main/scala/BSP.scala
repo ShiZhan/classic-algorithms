@@ -5,6 +5,7 @@ class BspGraph(m: Array[Array[Int]]) extends Graph(m) {
   sealed abstract class Messages
   case class UPDATE(value: Int) extends Messages
   case class STOP extends Messages
+  case class HALT extends Messages
 
   class Vertex(index: Int) extends Actor {
     var value = Int.MaxValue
@@ -22,7 +23,22 @@ class BspGraph(m: Array[Array[Int]]) extends Graph(m) {
               vertices(next) ! UPDATE(value + length)
             }
           case STOP => exit
+          case _ => monitor ! HALT
         }
+      }
+    }
+  }
+
+  val monitor = actor {
+    loop {
+      react {
+        case HALT =>
+          println("HALT")
+          if (vertices.forall(_.getState == State.Suspended)) {
+            vertices.foreach(_ ! STOP)
+            println("SHUTDOWN")
+            exit
+          }
       }
     }
   }
@@ -32,8 +48,6 @@ class BspGraph(m: Array[Array[Int]]) extends Graph(m) {
   def shortestPath(target: Int) = {
     vertices.foreach(_.start)
     vertices(target) ! UPDATE(0)
-    for (line <- io.Source.stdin.getLines)
-      line match { case "exit" => vertices.foreach(_ ! STOP) }
   }
 }
 
