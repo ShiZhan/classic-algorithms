@@ -18,11 +18,11 @@ class BspGraph(m: Array[Array[Int]]) extends Graph(m) {
         react {
           case UPDATE(newValue) => if (newValue < value) {
             value = newValue
-            if (edgesIn.isEmpty) monitor ! HALT
-            else for ((length, next) <- edgesIn) {
+            if (!edgesIn.isEmpty) for ((length, next) <- edgesIn) {
               println(s"$index->$next:$value+$length")
               vertices(next) ! UPDATE(value + length)
             }
+            else monitor ! HALT
           } else monitor ! HALT
           case STOP => exit
         }
