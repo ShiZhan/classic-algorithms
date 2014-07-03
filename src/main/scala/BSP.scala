@@ -16,14 +16,15 @@ class BspGraph(m: Array[Array[Int]]) extends Graph(m) {
     def act() = {
       loop {
         react {
-          case UPDATE(newValue) if (newValue < value) =>
+          case UPDATE(newValue) => if (newValue < value) {
             value = newValue
-            for ((length, next) <- edgesIn) {
+            if (edgesIn.isEmpty) monitor ! HALT
+            else for ((length, next) <- edgesIn) {
               println(s"$index->$next:$value+$length")
               vertices(next) ! UPDATE(value + length)
             }
+          } else monitor ! HALT
           case STOP => exit
-          case _ => monitor ! HALT
         }
       }
     }
