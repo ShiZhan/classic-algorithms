@@ -2,23 +2,22 @@ class BspGraph(m: Array[Array[Int]]) extends Graph(m) {
   import scala.actors.Actor
   import scala.actors.Actor._
 
-  def in(index: Int) = m.map(_(index)).zipWithIndex.filter(_._1 != 0)
-  def out(index: Int) = m(index).zipWithIndex.filter(_._1 != 0)
-
   sealed abstract class Messages
-
   case class UPDATE(value: Int) extends Messages
-
   case class STOP extends Messages
 
   class Vertex(index: Int) extends Actor {
     var value = Int.MaxValue
+
+    val edgesIn = m.map(_(index)).zipWithIndex.filter(_._1 != 0)
+    val edgesOut = m(index).zipWithIndex.filter(_._1 != 0)
+
     def act() = {
       loop {
         react {
           case UPDATE(newValue) if (newValue < value) =>
             value = newValue
-            for ((length, next) <- in(index)) {
+            for ((length, next) <- edgesIn) {
               println(s"$index->$next:$value+$length")
               vertices(next) ! UPDATE(value + length)
             }
@@ -33,7 +32,8 @@ class BspGraph(m: Array[Array[Int]]) extends Graph(m) {
   def shortestPath(target: Int) = {
     vertices.foreach(_.start)
     vertices(target) ! UPDATE(0)
-    for (line <- io.Source.stdin.getLines) line match { case "exit" => vertices.foreach(_ ! STOP) }
+    for (line <- io.Source.stdin.getLines)
+      line match { case "exit" => vertices.foreach(_ ! STOP) }
   }
 }
 
