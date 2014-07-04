@@ -30,23 +30,28 @@ class BspGraph(m: Array[Array[Int]]) extends Graph(m) {
     }
   }
 
-  val monitor = actor {
-    loop {
-      react {
-        case HALT =>
-          println("HALT")
-          if (vertices.forall(_.getState == State.Suspended)) {
-            vertices.foreach(_ ! STOP)
-            println("SHUTDOWN")
-            exit
-          }
+  val vertices = Array.tabulate(vertexTotal)(new Vertex(_))
+
+  class Monitor extends Actor {
+    def act() = {
+      loop {
+        react {
+          case HALT =>
+            println("HALT")
+            if (vertices.forall(_.getState == State.Suspended)) {
+              vertices.foreach(_ ! STOP)
+              println("SHUTDOWN")
+              exit
+            }
+        }
       }
     }
   }
 
-  val vertices = Array.tabulate(vertexTotal)(new Vertex(_))
+  val monitor = new Monitor()
 
   def shortestPath(target: Int) = {
+    monitor.start
     vertices.foreach(_.start)
     vertices(target) ! UPDATE(0)
   }
