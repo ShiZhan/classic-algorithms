@@ -8,6 +8,7 @@ object LongestCommonSequence {
         for ((r, j) <- right.zipWithIndex)
           t(i)(j) = if (l == r) get(t, i - 1, j - 1) + 1 else get(t, i - 1, j) max get(t, i, j - 1)
 
+      println(t.map(_.mkString(" ")).mkString("\n"))
       val lcsLen = t(left.length - 1)(right.length - 1)
       val lcs = Array.fill(lcsLen)((0, 0))
       var (i, j) = (left.length - 1, right.length - 1)

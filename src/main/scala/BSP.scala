@@ -4,8 +4,8 @@ class BspGraph(m: Array[Array[Int]]) extends Graph(m) {
 
   sealed abstract class Messages
   case class UPDATE(value: Int) extends Messages
-  case class STOP extends Messages
-  case class HALT extends Messages
+  case class STOP() extends Messages
+  case class HALT() extends Messages
 
   class Vertex(index: Int) extends Actor {
     var value = Int.MaxValue
