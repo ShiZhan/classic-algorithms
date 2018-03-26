@@ -80,22 +80,26 @@ class ConnectedMaze(height: Int, width: Int) extends Maze(height, width) {
 
 object SimpleMazeGenerator {
   def main(args: Array[String]) = {
-    val height = args(0).toInt; val width = args(1).toInt
+    val height = args.headOption.getOrElse("8").toInt
+    val width = args.lastOption.getOrElse("8").toInt
     val m = new SimpleMaze(height, width)
     println(m)
     val path = m.solve((1, 1), (height, width), List[(Int, Int)]())
     println(path)
-    val g = new Graph(m.toGraph); val vertexTotal = height * width
+    val g = new Graph(m.toGraph)
+    val vertexTotal = height * width
     println(g.reachable(0, vertexTotal - 1, Array.fill(vertexTotal)(false)))
   }
 }
 
 object ConnectedMazeGenerator {
   def main(args: Array[String]) = {
-    val height = args(0).toInt; val width = args(1).toInt
+    val height = args.headOption.getOrElse("8").toInt
+    val width = args.lastOption.getOrElse("8").toInt
     val m = new ConnectedMaze(height, width)
     println(m)
-    val g = new Graph(m.toGraph); val vertexTotal = height * width
+    val g = new Graph(m.toGraph)
+    val vertexTotal = height * width
     println(g.dijkstra(List((0, List(0))), vertexTotal - 1, Set[Int]()))
   }
 }
