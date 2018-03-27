@@ -2,11 +2,21 @@ class Maze(height: Int, width: Int) {
   val vMat = Array.fill(height + 1, width + 1)(1)
   val hMat = Array.fill(height + 1, width + 1)(1)
 
-  override def toString = (0 to height).map { r =>
-    val vLine = vMat(r).map { case 1 => "|"; case _ => " " }.mkString("  ", " ", "\n")
-    val hLine = hMat(r).map { case 1 => "-"; case _ => " " }.mkString(" ", "+", "+\n")
-    vLine + hLine
-  }.mkString
+  def render(vchar: String = "|", hchar: String = "-", joint: String = "+") =
+    (0 to height).map { r =>
+      val vLine = vMat(r).map { case 1 => vchar; case _ => " " }.mkString("  ", " ", "\n")
+      val hLine = hMat(r).map { case 1 => hchar; case _ => " " }.mkString(" ", joint, joint + "\n")
+      vLine + hLine
+    }.mkString
+
+  def toFile(filename: String) = {
+    import java.io._
+    val pw = new PrintWriter(new File(filename))
+    pw.write(render("█", "█", "█"))
+    pw.close
+  }
+
+  override def toString = render()
 
   def solve(from: (Int, Int), to: (Int, Int), visited: List[(Int, Int)]): List[(Int, Int)] =
     if (from == to) visited ++ List(to)
