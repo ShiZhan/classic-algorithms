@@ -3,9 +3,10 @@ class Maze(height: Int, width: Int) {
   val hMat = Array.fill(height + 1, width + 1)(1)
 
   def render(vchar: String = "|", hchar: String = "-", joint: String = "+") =
+    Iterator.from(0).map(_ % 10).take(width).mkString("      ",  " ", " " + "\n") +
     (0 to height).map { r =>
-      val vLine = vMat(r).map { case 1 => vchar; case _ => " " }.mkString("  ", " ", "\n")
-      val hLine = hMat(r).map { case 1 => hchar; case _ => " " }.mkString(" ", joint, joint + "\n")
+      val vLine = vMat(r).map { case 1 => vchar; case _ => " " }.mkString("%03d".format(r) + "  ", " ", "\n")
+      val hLine = hMat(r).map { case 1 => hchar; case _ => " " }.mkString("    ", joint, joint + "\n")
       vLine + hLine
     }.mkString
 
