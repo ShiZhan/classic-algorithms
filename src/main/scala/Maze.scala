@@ -70,7 +70,7 @@ class ConnectedMaze(height: Int, width: Int) extends Maze(height, width) {
   visited(r0)(c0) = true
   Random.shuffle(0 to 3).foreach { d => travel.push((r0, c0, d)) }
 
-  while(!travel.isEmpty) {
+  while(travel.nonEmpty) {
     val (r, c, d) = travel.pop
     d match {
       case 0 if (c < width)  && !visited(r)(c + 1) =>
