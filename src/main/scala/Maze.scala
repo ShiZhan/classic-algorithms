@@ -57,38 +57,38 @@ class SimpleMaze(height: Int, width: Int) extends Maze(height, width) {
 }
 
 class ConnectedMaze(height: Int, width: Int) extends Maze(height, width) {
-  import scala.collection.mutable.Stack
   import scala.util.Random
 
   (0 to height).foreach { hMat(_)(0) = 0 }
   (0 to width).foreach { vMat(0)(_) = 0 }
 
   val visited = Array.fill(height + 1, width + 1)(false)
-  var travel = Stack[(Int, Int, Int)]()
+  var travel = List[(Int, Int, Int)]()
   val r0 = height / 2
   val c0 = width / 2
   visited(r0)(c0) = true
-  Random.shuffle(0 to 3).foreach { d => travel.push((r0, c0, d)) }
+  Random.shuffle(0 to 3).foreach { d => travel +:= (r0, c0, d) }
 
   while(travel.nonEmpty) {
-    val (r, c, d) = travel.pop
+    val (r, c, d) = travel.head
+    travel = travel.tail
     d match {
       case 0 if (c < width)  && !visited(r)(c + 1) =>
         vMat(r)(c) = 0
         visited(r)(c + 1) = true
-        Random.shuffle(Seq(0, 1, 3)).foreach { d => travel.push((r, c + 1, d)) }
+        Random.shuffle(Seq(0, 1, 3)).foreach { d => travel +:= (r, c + 1, d) }
       case 1 if (r < height) && !visited(r + 1)(c) =>
         hMat(r)(c) = 0
         visited(r + 1)(c) = true
-        Random.shuffle(Seq(0, 1, 2)).foreach { d => travel.push((r + 1, c, d)) }
+        Random.shuffle(Seq(0, 1, 2)).foreach { d => travel +:= (r + 1, c, d) }
       case 2 if (c > 1)      && !visited(r)(c - 1) =>
         vMat(r)(c-1) = 0
         visited(r)(c - 1) = true
-        Random.shuffle(Seq(1, 2, 3)).foreach { d => travel.push((r, c - 1, d)) }
+        Random.shuffle(Seq(1, 2, 3)).foreach { d => travel +:= (r, c - 1, d) }
       case 3 if (r > 1)      && !visited(r - 1)(c) =>
         hMat(r-1)(c) = 0
         visited(r - 1)(c) = true
-        Random.shuffle(Seq(0, 2, 3)).foreach { d => travel.push((r - 1, c, d)) }
+        Random.shuffle(Seq(0, 2, 3)).foreach { d => travel +:= (r - 1, c, d) }
       case _ =>
     }
   }
